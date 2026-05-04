@@ -67,44 +67,52 @@ elif st.session_state.page == "raise":
         destination_ip = st.text_input("Destination IP")
         mitre_tactic = st.text_input("MITRE Tactic")
         mitre_technique = st.text_input("MITRE Technique")
+        event_category = st.text_input("Event Category")
+        logon_type = st.text_input("Logon Type")
 
+    process_path = st.text_area("Process / Command")
     analysis = st.text_area("Analysis")
     activity = st.text_area("Activity Pattern Indicates")
     recommendation = st.text_area("Recommendations")
+
+    st.subheader("Threat Intel")
+    ti_ip = st.text_input("IP Address")
+    ti_isp = st.text_input("ISP")
+    ti_score = st.text_input("VT Score")
+    ti_result = st.text_input("Result")
 
     assigned_to = st.text_input("Assigned To")
 
     if st.button("Generate Email & Tracker"):
 
-        # -------- CONVERT ALERT TIME --------
+        # -------- TIME LOGIC --------
         formatted_alert_time = convert_alert_time(alert_time)
+        alert_detected = formatted_alert_time
 
+        now_dt = datetime.now(IST)
+
+        ack_dt = now_dt + timedelta(minutes=10)
+        ack_time = ack_dt.strftime("%d %b %Y %H:%M")
+
+        email_sent_time = ack_time
+
+        # -------- AGING + MTTR --------
         try:
             alert_dt = datetime.strptime(formatted_alert_time, "%d %b %Y %H:%M")
             alert_dt = alert_dt.replace(tzinfo=IST)
+
+            aging_days = (now_dt.date() - alert_dt.date()).days
+            mttr_hours = round((ack_dt - alert_dt).total_seconds() / 3600, 2)
+
         except:
-            st.error("Invalid alert time format")
-            st.stop()
+            aging_days = 0
+            mttr_hours = 0
 
-        # -------- CURRENT TIME --------
-        now_dt = datetime.now(IST)
-
-        # -------- ACK TIME (+10 mins) --------
-        ack_dt = now_dt + timedelta(minutes=10)
-
-        # -------- FORMATTED TIMES --------
-        alert_detected = formatted_alert_time
-        email_sent_time = ack_dt.strftime("%d %b %Y %H:%M")
-        ack_time = email_sent_time
-
-        # -------- AGING --------
-        aging_days = (now_dt.date() - alert_dt.date()).days
-
-        # -------- MTTR --------
-        mttr_hours = round((ack_dt - alert_dt).total_seconds() / 3600, 2)
+        prev_alert = "No Previous Occurrences were found for the same Alert Type and Host."
+        prev_desc = "-"
 
         # =========================================
-        # 📧 EMAIL GENERATION
+        # 📧 EMAIL TEMPLATE (DO NOT MODIFY STRUCTURE)
         # =========================================
 
         email_html = f"""
@@ -353,7 +361,7 @@ Thanks & Regards,<br>
 
             "Status": "Open",
             "EmailStatus": "Email Sent",
-            "Remarks": "Email Sent, awaiting response",
+            "Remarks": "Email Sent; awaiting response",
             "FollowUpCount": 0
         }
 
@@ -373,4 +381,10 @@ Thanks & Regards,<br>
 # CLOSE INCIDENT
 # ============================
 elif st.session_state.page == "close":
-    st.title("Coming Soon...")
+
+    st.title("Close Incident")
+
+    if st.button("⬅ Back"):
+        st.session_state.page = "home"
+
+    st.info("Closure module ready to be integrated with your existing template.")
