@@ -354,7 +354,6 @@ Thanks & Regards,<br>
             "Assigned_to": assigned_to,
             "AlertTime": formatted_alert_time,
             "AlertDetected": now,
-            "EmailSentTime": now,
             "AcknowledgeTime": ack_time,
             "Aging (Days)": aging_days,
             "MTTR (Hours)": mttr_hours,
