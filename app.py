@@ -357,7 +357,7 @@ Thanks & Regards,<br>
             "FromEmail": "soc.sbfc@talakunchi.com",
             "User": "Siddharth",
             "Assigned_to": assigned_to,
-            "AlertDetected": formatted_alert_time,
+            "AlertDetected": alert_detected,
             "AcknowledgeTime": ack_time,
             "Aging (Days)": aging_days,
             "MTTR (Hours)": mttr_hours,
