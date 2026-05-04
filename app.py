@@ -1,9 +1,8 @@
 import streamlit as st
 import pandas as pd
 from datetime import datetime, timedelta
-import pytz # pyright: ignore[reportMissingModuleSource]
 
-IST = pytz.timezone("Asia/Kolkata")
+IST = timezone(timedelta(hours=5, minutes=30))
 
 st.set_page_config(layout="wide")
 
