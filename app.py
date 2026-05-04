@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime, timedelta, timezone
 
+# -------- IST TIMEZONE --------
 IST = timezone(timedelta(hours=5, minutes=30))
 
 st.set_page_config(layout="wide")
@@ -10,7 +11,7 @@ st.set_page_config(layout="wide")
 def convert_alert_time(raw_time):
     try:
         dt = datetime.strptime(raw_time, "%b %d, %Y @ %H:%M:%S.%f")
-        dt = IST.localize(dt)
+        dt = dt.replace(tzinfo=IST)
         return dt.strftime("%d %b %Y %H:%M")
     except:
         return raw_time
@@ -24,43 +25,16 @@ if "page" not in st.session_state:
 # ============================
 if st.session_state.page == "home":
 
-    st.markdown("""
-    <style>
-    .main { background-color: #f5f7fa; }
-    .title {
-        text-align: center;
-        font-size: 34px;
-        font-weight: 600;
-        margin-bottom: 40px;
-    }
-    div.stButton > button {
-        height: 160px;
-        font-size: 20px;
-        border-radius: 16px;
-        border: 1px solid #dcdcdc;
-        background: white;
-        box-shadow: 0px 4px 10px rgba(0,0,0,0.05);
-        transition: 0.25s;
-        font-weight: 600;
-    }
-    div.stButton > button:hover {
-        transform: translateY(-6px);
-        box-shadow: 0px 12px 25px rgba(0,0,0,0.15);
-        border: 1px solid #007bff;
-    }
-    </style>
-    """, unsafe_allow_html=True)
-
-    st.markdown('<div class="title">SOC Automation Dashboard</div>', unsafe_allow_html=True)
+    st.title("SOC Automation Dashboard")
 
     col1, col2 = st.columns(2)
 
     with col1:
-        if st.button("🚨\nRaise Incident\n\nCreate new security alert", use_container_width=True):
+        if st.button("🚨 Raise Incident", use_container_width=True):
             st.session_state.page = "raise"
 
     with col2:
-        if st.button("✅\nClose Incident\n\nResolve and close alerts", use_container_width=True):
+        if st.button("✅ Close Incident", use_container_width=True):
             st.session_state.page = "close"
 
 # ============================
@@ -79,7 +53,7 @@ elif st.session_state.page == "raise":
         alert_title = st.text_input("Alert Title")
         alert_summary = st.text_area("Alert Summary")
         alert_id = st.text_input("Alert ID")
-        alert_time = st.text_input("Alert Time")
+        alert_time = st.text_input("Alert Time (e.g. May 4, 2026 @ 16:49:43.465)")
         alert_source = st.text_input("Alert Source")
         risk = st.text_input("Risk Score")
         severity = st.selectbox("Severity", ["Low", "Medium", "High"])
@@ -93,51 +67,48 @@ elif st.session_state.page == "raise":
         destination_ip = st.text_input("Destination IP")
         mitre_tactic = st.text_input("MITRE Tactic")
         mitre_technique = st.text_input("MITRE Technique")
-        event_category = st.text_input("Event Category")
-        logon_type = st.text_input("Logon Type")
 
-    process_path = st.text_area("Process / Command")
     analysis = st.text_area("Analysis")
     activity = st.text_area("Activity Pattern Indicates")
     recommendation = st.text_area("Recommendations")
-
-    st.subheader("Threat Intel")
-    ti_ip = st.text_input("IP Address")
-    ti_isp = st.text_input("ISP")
-    ti_score = st.text_input("VT Score")
-    ti_result = st.text_input("Result")
 
     assigned_to = st.text_input("Assigned To")
 
     if st.button("Generate Email & Tracker"):
 
-        # Convert alert time
+        # -------- CONVERT ALERT TIME --------
         formatted_alert_time = convert_alert_time(alert_time)
-        
-        # AlertDetected = AlertTime
-        alert_detected = formatted_alert_time
-        
-        # Current IST time
-        now_dt = datetime.now(IST)
-        
-        # Acknowledge = +10 mins
-        ack_dt = now_dt + timedelta(minutes=10)
-        ack_time = ack_dt.strftime("%d %b %Y %H:%M")
 
         try:
             alert_dt = datetime.strptime(formatted_alert_time, "%d %b %Y %H:%M")
-            alert_dt = IST.localize(alert_dt)
-            aging_days = (now_dt - alert_dt).days
-            mttr_hours = round((now_dt - alert_dt).total_seconds() / 3600, 2)
+            alert_dt = alert_dt.replace(tzinfo=IST)
         except:
-            aging_days = 0
-            mttr_hours = 0
+            st.error("Invalid alert time format")
+            st.stop()
 
-        prev_alert = "No Previous Occurrences were found for the same Alert Type and Host."
-        prev_desc = "-"
+        # -------- CURRENT TIME --------
+        now_dt = datetime.now(IST)
 
-        # ✅ YOUR ORIGINAL EMAIL (ONLY alert_time replaced)
-        email_html = f"""<html>
+        # -------- ACK TIME (+10 mins) --------
+        ack_dt = now_dt + timedelta(minutes=10)
+
+        # -------- FORMATTED TIMES --------
+        alert_detected = formatted_alert_time
+        email_sent_time = ack_dt.strftime("%d %b %Y %H:%M")
+        ack_time = email_sent_time
+
+        # -------- AGING --------
+        aging_days = (now_dt.date() - alert_dt.date()).days
+
+        # -------- MTTR --------
+        mttr_hours = round((ack_dt - alert_dt).total_seconds() / 3600, 2)
+
+        # =========================================
+        # 📧 EMAIL GENERATION
+        # =========================================
+
+        email_html = f"""
+        <html>
 <body style="font-family:Calibri; font-size:12px; background:#ffffff;">
 <div style="width:850px; margin:auto;">
 
@@ -350,17 +321,28 @@ Thanks & Regards,<br>
 </div>
 </body>
 </html>
+
         """
+
+        # =========================================
+        # 📊 TRACKER
+        # =========================================
 
         tracker = {
             "AlertID": alert_id,
             "FromEmail": "soc.sbfc@talakunchi.com",
             "User": "Siddharth",
             "Assigned_to": assigned_to,
+
+            "AlertTime": formatted_alert_time,
             "AlertDetected": alert_detected,
+
+            "EmailSentTime": email_sent_time,
             "AcknowledgeTime": ack_time,
+
             "Aging (Days)": aging_days,
             "MTTR (Hours)": mttr_hours,
+
             "Subject": f"{alert_id} | {alert_title} | {affected_host}",
             "AlertSource": alert_source,
             "AffectedAsset": affected_host,
@@ -368,6 +350,7 @@ Thanks & Regards,<br>
             "Risk Score": risk,
             "MITRETactic": mitre_tactic,
             "MITRETechnique": mitre_technique,
+
             "Status": "Open",
             "EmailStatus": "Email Sent",
             "Remarks": "Email Sent, awaiting response",
@@ -375,6 +358,10 @@ Thanks & Regards,<br>
         }
 
         df = pd.DataFrame([tracker])
+
+        # =========================================
+        # OUTPUT
+        # =========================================
 
         st.subheader("Email Output")
         st.markdown(email_html, unsafe_allow_html=True)
