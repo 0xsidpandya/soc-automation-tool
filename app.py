@@ -342,10 +342,10 @@ Thanks & Regards,<br>
             "User": "Siddharth",
             "Assigned_to": assigned_to,
 
-            "AlertTime": formatted_alert_time,
+            
             "AlertDetected": alert_detected,
 
-            "EmailSentTime": email_sent_time,
+            
             "AcknowledgeTime": ack_time,
 
             "Aging (Days)": aging_days,
