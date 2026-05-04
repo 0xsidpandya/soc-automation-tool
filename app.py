@@ -111,13 +111,18 @@ elif st.session_state.page == "raise":
 
     if st.button("Generate Email & Tracker"):
 
+        # Convert alert time
+        formatted_alert_time = convert_alert_time(alert_time)
+        
+        # AlertDetected = AlertTime
+        alert_detected = formatted_alert_time
+        
+        # Current IST time
         now_dt = datetime.now(IST)
-        now = now_dt.strftime("%d %b %Y %H:%M")
-
+        
+        # Acknowledge = +10 mins
         ack_dt = now_dt + timedelta(minutes=10)
         ack_time = ack_dt.strftime("%d %b %Y %H:%M")
-
-        formatted_alert_time = convert_alert_time(alert_time)
 
         try:
             alert_dt = datetime.strptime(formatted_alert_time, "%d %b %Y %H:%M")
@@ -352,8 +357,7 @@ Thanks & Regards,<br>
             "FromEmail": "soc.sbfc@talakunchi.com",
             "User": "Siddharth",
             "Assigned_to": assigned_to,
-            "AlertTime": formatted_alert_time,
-            "AlertDetected": now,
+            "AlertDetected": formatted_alert_time,
             "AcknowledgeTime": ack_time,
             "Aging (Days)": aging_days,
             "MTTR (Hours)": mttr_hours,
