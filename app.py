@@ -257,7 +257,32 @@ elif st.session_state.page == "raise":
 
 <!-- PREVIOUS OCCURRENCE -->
 <tr style="background:#e6cbb3;">
-<td colspan="4" style="padding:10px; font-size:14px; border:1px solid #c5c5c5;"><b>Previous Occurrence</b></td>
+<td colspan="4" style="padding:10px; font-size:14px; border:1px solid #c5c5c5;"><b>Previous Occurrence in 7 Days</b></td>
+</tr>
+
+<tr>
+<td colspan="4" style="padding:10px; border:1px solid #c5c5c5;">
+<table style="width:100%; border-collapse:collapse;">
+
+<tr style="background:#d9d9d9;">
+<td style="border:1px solid #c5c5c5; padding:8px;"><b>Alert ID</b></td>
+<td style="border:1px solid #c5c5c5; padding:8px;"><b>Description</b></td>
+</tr>
+
+<tr>
+<td style="border:1px solid #c5c5c5; padding:8px;">{prev_alert}</td>
+<td style="border:1px solid #c5c5c5; padding:8px;">{prev_desc}</td>
+</tr>
+
+</table>
+</td>
+</tr>
+
+<tr><td colspan="4" style="height:20px;"></td></tr>
+
+<!-- PREVIOUS OCCURRENCE -->
+<tr style="background:#e6cbb3;">
+<td colspan="4" style="padding:10px; font-size:14px; border:1px solid #c5c5c5;"><b>Recent 3 Occurences</b></td>
 </tr>
 
 <tr>
