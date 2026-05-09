@@ -57,8 +57,8 @@ elif st.session_state.page == "raise":
         alert_source = st.text_input("Alert Source")
         risk = st.text_input("Risk Score")
         severity = st.selectbox("Severity", ["Low", "Medium", "High"])
-        affected_host = st.text_input("Affected Host")
-        affected_user = st.text_input("Affected User")
+        affected_host = st.text_input("Affected Host / Device Name")
+        affected_user = st.text_input("Affected User / Email")
 
     with col2:
         event_time = st.text_input("Event Time")
@@ -70,13 +70,13 @@ elif st.session_state.page == "raise":
         event_category = st.text_input("Event Category")
         logon_type = st.text_input("Logon Type")
 
-    process_path = st.text_area("Process / Command")
+    process_path = st.text_area("Process / Command / Suspicious Domains")
     analysis = st.text_area("Analysis")
     activity = st.text_area("Activity Pattern Indicates")
     recommendation = st.text_area("Recommendations")
 
     st.subheader("Threat Intel")
-    ti_ip = st.text_input("IP Address")
+    ti_ip = st.text_input("IP Address / Domain")
     ti_isp = st.text_input("ISP")
     ti_score = st.text_input("VT Score")
     ti_result = st.text_input("Result")
@@ -174,9 +174,9 @@ elif st.session_state.page == "raise":
 </tr>
 
 <tr>
-<td style="background:#b7c9d6; padding:10px; border:1px solid #c5c5c5;"><b>Affected Host</b></td>
+<td style="background:#b7c9d6; padding:10px; border:1px solid #c5c5c5;"><b>Affected Host / Device Name</b></td>
 <td style="padding:10px; border:1px solid #c5c5c5;">{affected_host}</td>
-<td style="background:#b7c9d6; padding:10px; border:1px solid #c5c5c5;"><b>Affected User</b></td>
+<td style="background:#b7c9d6; padding:10px; border:1px solid #c5c5c5;"><b>Affected User / Email</b></td>
 <td style="padding:10px; border:1px solid #c5c5c5;">{affected_user}</td>
 </tr>
 
@@ -210,7 +210,7 @@ elif st.session_state.page == "raise":
 </tr>
 
 <tr>
-<td style="background:#b7c9d6; padding:10px; border:1px solid #c5c5c5;"><b>Process / Command</b></td>
+<td style="background:#b7c9d6; padding:10px; border:1px solid #c5c5c5;"><b>Process / Command / Suspicious Domain</b></td>
 <td colspan="3" style="padding:10px; border:1px solid #c5c5c5;">{process_path}</td>
 </tr>
 
@@ -225,7 +225,7 @@ elif st.session_state.page == "raise":
 </tr>
 
 <tr>
-<td style="background:#b7c9d6; padding:10px; border:1px solid #c5c5c5;"><b>Remove Empty Fields above(including this)</b></td>
+<td style="background:#b7c9d6; padding:10px; border:1px solid #c5c5c5;"><b>Remove Empty Fields above(including this and based on alert type change the field Name Please)</b></td>
 <td colspan="3" style="padding:10px; border:1px solid #c5c5c5;"></td>
 </tr>
 
@@ -326,6 +326,20 @@ elif st.session_state.page == "raise":
 <td style="border:1px solid #c5c5c5; padding:8px;">{ti_isp}</td>
 <td style="border:1px solid #c5c5c5; padding:8px;">{ti_score}</td>
 <td style="border:1px solid #c5c5c5; padding:8px;">{ti_result}</td>
+</tr>
+
+<tr>
+<td style="border:1px solid #c5c5c5; padding:8px;">"Add More"</td>
+<td style="border:1px solid #c5c5c5; padding:8px;">"Add More</td>
+<td style="border:1px solid #c5c5c5; padding:8px;">"Add More"</td>
+<td style="border:1px solid #c5c5c5; padding:8px;">"Add More"</td>
+</tr>
+
+<tr>
+<td style="border:1px solid #c5c5c5; padding:8px;">"Add More"</td>
+<td style="border:1px solid #c5c5c5; padding:8px;">"Add More</td>
+<td style="border:1px solid #c5c5c5; padding:8px;">"Add More"</td>
+<td style="border:1px solid #c5c5c5; padding:8px;">"Add More"</td>
 </tr>
 
 </table>
