@@ -329,17 +329,17 @@ elif st.session_state.page == "raise":
 </tr>
 
 <tr>
-<td style="border:1px solid #c5c5c5; padding:8px;">"Add More"</td>
-<td style="border:1px solid #c5c5c5; padding:8px;">"Add More</td>
-<td style="border:1px solid #c5c5c5; padding:8px;">"Add More"</td>
-<td style="border:1px solid #c5c5c5; padding:8px;">"Add More"</td>
+<td style="border:1px solid #c5c5c5; padding:8px;">"Add More if needed else remove the row"</td>
+<td style="border:1px solid #c5c5c5; padding:8px;">""</td>
+<td style="border:1px solid #c5c5c5; padding:8px;">""</td>
+<td style="border:1px solid #c5c5c5; padding:8px;">""</td>
 </tr>
 
 <tr>
-<td style="border:1px solid #c5c5c5; padding:8px;">"Add More"</td>
-<td style="border:1px solid #c5c5c5; padding:8px;">"Add More</td>
-<td style="border:1px solid #c5c5c5; padding:8px;">"Add More"</td>
-<td style="border:1px solid #c5c5c5; padding:8px;">"Add More"</td>
+<td style="border:1px solid #c5c5c5; padding:8px;">"Add More if needed else remove the row"</td>
+<td style="border:1px solid #c5c5c5; padding:8px;">""</td>
+<td style="border:1px solid #c5c5c5; padding:8px;">""</td>
+<td style="border:1px solid #c5c5c5; padding:8px;">""</td>
 </tr>
 
 </table>
